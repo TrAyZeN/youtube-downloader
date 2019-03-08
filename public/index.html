@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Youtube Downloader</title>
+        <link rel="stylesheet" type="text/css" href="./stylesheets/style.css">
+        <link rel="icon" type="image/png" href="./images/icon.png">
+    </head>
+
+    <body>
+        <h1 id="title">Youtube Downloader</h1>
+        
+        <form novalidate>
+            <input id="url-field" type="text" name="url"><br/>
+            <input type="button" value="Convert" onclick="submitUrl()">
+        </form><br/>
+
+        <h2 id="error"></h2>
+
+        <div id="options">
+            <h1 id="options-title">Options</h1>
+            <button onclick="showOptions()" id="deploy-options">V</button>
+            
+            <div id="options-tab">
+                <button onclick="openOptionsTab('mp3')" id="tab-button-mp3" class="active">mp3</button>
+                <button onclick="openOptionsTab('mp4')" id="tab-button-mp4">mp4</button>
+            </div>
+                
+            <div id="mp3" class="options-tab-content">
+            </div>
+
+            <div id="mp4" class="options-tab-content">
+            </div>
+        </div>
+        
+        <div id="downloading">
+            <h2>The server is downloading the video</h2><br/>
+            <canvas width="200" height="200" id="progress-circle"></canvas>
+        </div>
+        
+        <div id="download-finished">
+            <h2>The server has finished to download the video, click the button to download the video</h2>
+            <button onclick="download()">Download</button>
+        </div>
+
+        <h1 id="author">Made by TrAyZeN</h1>
+
+        <script src="./javascript/script.js"></script>
+    </body>
+
+</html>
