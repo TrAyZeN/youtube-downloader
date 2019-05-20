@@ -17,5 +17,5 @@
     "start": "node ./bin/www.js"
   },
   "author": "TrAyZeN",
-  "license": "ISC"
+  "license": "MIT"
 }
