@@ -20,7 +20,7 @@ form {
     margin-top: 25px;
 }
 
-#options-tab, .options-tab-content, #error, #downloading, #download-finished {
+.options-tab, .options-tab-content, .error, .downloading, .download-finished {
     display: none;
 }
 
@@ -51,17 +51,17 @@ input[type=text] {
     outline: none;
 }
 
-#title {
+.title {
     font-size: 48px;
 }
 
-#options-title {
+.options-title {
     display: inline-block;
     font-size: 34px;
     margin-right: 20px;
 }
 
-#deploy-options {
+.deploy-options {
     width: auto;
     height: auto;
     background-color: transparent;
@@ -75,25 +75,25 @@ input[type=text] {
     position: absolute;
 }
 
-#options-tab {
+.options-tab {
     overflow: hidden;
     opacity: 0;
 }
-.active, #options-tab button:hover  {
+.active, .options-tab button:hover  {
     background-color: #00d4ff;
     color: white;
 }
 
-#progress-circle {
+.progress-circle {
     transform: rotate(0.75turn);    /* to have the 0 at 12 o'clock */
     -webkit-transform: rotate(0.75turn);    
 }
 
-#error {
+.error {
     color: #ff6868;
 }
 
-#author {
+.author {
     font-size: 18px;
     position: fixed;     
     text-align: right;

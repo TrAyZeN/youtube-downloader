@@ -4,17 +4,20 @@
   "description": "Download youtube videos",
   "main": "./bin/www.js",
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.17",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
+    "@ffmpeg-installer/ffmpeg": "^1.0.19",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
-    "helmet": "^3.15.1",
-    "ytdl-core": "^0.29.1"
+    "helmet": "^3.20.0",
+    "ytdl-core": "^0.29.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
   "scripts": {
-    "start": "node ./bin/www.js"
+    "start": "node ./bin/www.js",
+    "dev": "nodemon ./bin/www.js"
   },
   "author": "TrAyZeN",
   "license": "MIT"

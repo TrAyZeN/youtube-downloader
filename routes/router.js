@@ -16,85 +16,120 @@ router.get("/", (request, response) => {
 });
 
 router.post("/convert", (request, response) => {
-    let videoUrl = request.body.videourl;
+    const videoUrl = request.body.videourl;
+    const format = request.body.format;
     console.log("Video url:", videoUrl);
 
     if (ytdl.validateURL(videoUrl) === true) {
         console.log("The video url is valid");
         response.write(JSON.stringify({ state: "valid-url" }));
-
-        ytdl.getInfo(videoUrl, (error, info) => {
-            if (error) {
-                console.log("getInfo error:", error);
-                response.write("\n" + JSON.stringify({ state: "getInfo-error", info: error }));
-                response.end();
-            }
-            let videoLength = info.length_seconds;
-            let videoTitle = info.title;
-            let videoId = ytdl.getURLVideoID(videoUrl);
-            let format = request.body.format
-            let fileName = videoId + "." + format;
-            return new Promise((resolve, reject) => {
-        
-                fs.readdirSync("./downloads/").forEach(file => {
-                    if (file == fileName) {  // TODO: do something with the file already existing
-                        console.log("The file is already existing");
-                    }
-                });
-        
-                let stream = ytdl(videoId);
-                let command = ffmpeg(stream)
-                    .toFormat(format)
-                    .audioBitrate(198)
-                    .on("error", (error) => {
-                        reject(error);
-                    })
-                    .on("progress", (chunk) => {
-                        // convert timemark format 'hh:mm:ss.dd' to its length in seconds
-                        let currentLength = chunk.timemark.slice(0, -3).split(":")
-                            .map((currentValue, index) => (60**(2-index))*parseInt(currentValue))
-                            .reduce((accumulator, currentValue) => accumulator + currentValue);
-    
-                        let percentage = currentLength / videoLength;
-                        response.write("\n" + JSON.stringify({ state: "download-progress", percentage: percentage }));
-                    })
-                    .on("end", () => {
-                        response.write("\n" + JSON.stringify({ state: "server-download-finished", fileName: fileName, videoTitle: videoTitle }));
-                        response.end();
-                    });
-        
-                if (format == "mp3") {
-                    command.noVideo();
-                }
-                else if (format == "mp4") {
-                    command.videoBitrate(1400);
-                }
-                
-                command.save("downloads/" + fileName);
-                resolve();
-            }).catch((error) => {
-                console.log("download error:", error);
-                response.write("\n" + JSON.stringify({ state: "download-error", info: error }));
-                response.end();
-            });
-        });
-    }
-    else {
+    } else {
         console.log("The video url is not valid");
         response.send(JSON.stringify({ state: "invalid-url" }));
+        response.end();
+        return;
     }
-});
+    
+    ytdl.getInfo(videoUrl, (error, info) => {
+        if (error) {
+            console.log("Failed to get video info:", error);
+            response.write("\n" + JSON.stringify({ state: "get-info-error", info: error }));
+            response.end();
+            return;
+        }
+    
+        const filename = info.video_id + "." + format;
+        console.log("Video info successfully retrieved");
 
-router.get("/download", (request, response) => {
-    let fileName = request.query.file;  // filename is following this norm: videoId.format ex: RandomId.mp3
-    let videoId = fileName.split(".")[0];
-    ytdl.getInfo(videoId, (error, info) => {
-        if (error) throw error;
-        let title = info.title.replace(/\//g, " ");      // replace every '/' in the title by ' '
-        let fileLocation = path.join("./downloads", fileName);
-        let format = fileLocation.split(".")[1];
-        response.download(fileLocation, title + "." + format);
+        serverDownload(info, format, response);
     });
 });
+
+function serverDownload(videoInfo, format, response) {
+    const videoId = videoInfo.video_id;
+    const videoTitle = videoInfo.title;
+    const videoLength = videoInfo.length_seconds;
+    const filename = videoId + "." + format; 
+    const filePath = `downloads/${filename}`;
+
+    let readStream = ytdl(videoId);
+        
+    if (format == "mp3") {
+        var command = downloadAudio(readStream, format);
+    }
+    else if (format == "mp4") {
+        var command = downloadVideo(readStream, format);
+    } else {
+        console.log("Invalid file format");
+        response.write("\n" + JSON.stringify({ state: "invalid-format-error", info: `${format} is not a valid format` }));
+        response.end();
+        return;
+    }
+
+    command.on("error", (error) => {
+            console.log("Failed to write stream:", error);
+            response.write("\n" + JSON.stringify({state: "ffmpeg-error", info: error }));
+            response.end();
+            fs.unlinkSync(filePath);
+            return;
+        })
+        .on("progress", (chunk) => {
+            const percentage = getLengthFromTimemark(chunk.timemark) / videoLength;
+            response.write("\n" + JSON.stringify({ state: "download-progress", percentage: percentage }));
+        })
+        .on("end", () => {
+            console.log("Video successfully downloaded");
+            response.write("\n" + JSON.stringify({ state: "server-download-finished", filename: filename, videotitle: videoTitle }));
+            response.end();
+        })
+        .save(filePath);
+}
+
+function downloadAudio(readStream, format) {
+    return ffmpeg(readStream)
+        .toFormat(format)
+        .audioBitrate(198)
+        .noVideo();
+}
+
+function downloadVideo(readStream, format) {
+    return ffmpeg(readStream)
+        .toFormat(format)
+        .audioBitrate(198)
+        .videoBitrate(1400);
+}
+
+// convert timemark format 'hh:mm:ss.dd' to its length in seconds
+function getLengthFromTimemark(timemark) {
+    return timemark.slice(0, -3).split(":")
+        .map((currentValue, index) => (60**(2-index))*parseInt(currentValue))
+        .reduce((accumulator, currentValue) => accumulator + currentValue);
+}
+
+router.get("/download", (request, response) => {
+    const filename = request.query.file;  // filename is following this norm: videoId.extension ex: RandomId.mp3
+    ytdl.getInfo(getVideoIdByFilename(filename), (error, info) => {
+        if (error) {
+            console.log("Failed to get video info :", error);
+            response.write("\n" + JSON.stringify({ state: "get-info-error", info: error }));
+            response.end();
+            return;
+        }
+        const title = request.query.title.replace(/\//g, " ");      // replace every '/' in the title by ' ', to avoid error
+        response.download(getPathByFilename(filename), `${title}.${getExtensionByFilename(filename)}`);
+    });
+});
+
+function getVideoIdByFilename(filename) {
+    return filename.split(".")[0];
+}
+
+function getExtensionByFilename(filename) {
+    return filename.split(".")[1];
+}
+
+function getPathByFilename(filename) {
+    return path.join("./downloads", filename);
+}
 
 module.exports = router;

@@ -5,7 +5,7 @@
 - [Installation](#installation)
 
 # What is youtube-downloader?
-youtube-downloader is a website made using expressjs that lets you download youtube videos to mp3 or mp4 format.
+youtube-downloader is a simple single page website running under nodejs using express that lets you download youtube videos to mp3 or mp4 format.
 
 # Requirements
 - [Node.js](https://nodejs.org/)

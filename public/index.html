@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
     <head>
         <meta charset="utf-8">
@@ -10,22 +10,22 @@
     </head>
 
     <body>
-        <h1 id="title">Youtube Downloader</h1>
+        <h1 class="title">Youtube Downloader</h1>
         
         <form novalidate>
-            <input id="url-field" type="text" name="url"><br/>
-            <input type="button" value="Convert" onclick="submitUrl()">
+            <input id="url-field" type="text" name="url" /><br/>
+            <input id="submit-url-button" type="button" value="Convert" />
         </form><br/>
 
-        <h2 id="error"></h2>
+        <h2 id="error" class="error"></h2>
 
         <div id="options">
-            <h1 id="options-title">Options</h1>
-            <button onclick="showOptions()" id="deploy-options">V</button>
+            <h1 class="options-title">Options</h1>
+            <button id="deploy-options" class="deploy-options">V</button>
             
-            <div id="options-tab">
-                <button onclick="openOptionsTab('mp3')" id="tab-button-mp3" class="active">mp3</button>
-                <button onclick="openOptionsTab('mp4')" id="tab-button-mp4">mp4</button>
+            <div id="options-tab" class="options-tab">
+                <button id="tab-button-mp3" class="active">mp3</button>
+                <button id="tab-button-mp4">mp4</button>
             </div>
                 
             <div id="mp3" class="options-tab-content">
@@ -35,17 +35,19 @@
             </div>
         </div>
         
-        <div id="downloading">
+        <div id="downloading" class="downloading">
             <h2>The server is downloading the video</h2><br/>
-            <canvas width="200" height="200" id="progress-circle"></canvas>
+            <canvas id="progress-circle" class="progress-circle" width="200" height="200"></canvas>
         </div>
         
-        <div id="download-finished">
+        <div id="download-finished" class="download-finished">
             <h2>The server has finished to download the video, click the button to download the video</h2>
-            <button onclick="download()">Download</button>
+            <button id="download-button">Download</button>
         </div>
 
-        <h1 id="author">Made by TrAyZeN</h1>
+        <footer>
+            <h1 class="author">Made by TrAyZeN</h1>
+        </footer>
 
         <script src="./javascript/script.js"></script>
     </body>

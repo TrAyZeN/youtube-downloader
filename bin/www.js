@@ -10,13 +10,17 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
     console.log("Server started on port " + port);
-    // delete every file except '.gitkeep' in the downloads directory
-    fs.readdirSync("./downloads/").forEach(file => {
-        if (file != ".gitkeep") fs.unlinkSync("./downloads/" + file);
-    });
+    clearDownloadFolder();
 });
 server.on("error", onError);
 server.on("listening", onListening);
+
+function clearDownloadFolder() {
+	// delete every file except '.gitkeep' in the downloads directory
+    fs.readdirSync("./downloads/").forEach(file => {
+        if (file != ".gitkeep") fs.unlinkSync("./downloads/" + file);
+    });
+}
 
 
 /**

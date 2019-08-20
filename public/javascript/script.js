@@ -1,152 +1,186 @@
 var errorElement = document.getElementById("error");
 var downloadingElement = document.getElementById("downloading");
 var downloadFinishedElement = document.getElementById("download-finished");
-var progressCircle = document.getElementById("progress-circle");
+var progressCircleElement = document.getElementById("progress-circle");
 var optionsTab = document.getElementById("options-tab");
 var deployOptionsButton = document.getElementById("deploy-options");
-var fileName = "";
+var filename = "";
 var videoTitle = "";
 var optionsTabSelected = "mp3";
 
 
 window.onload = function() {
-    optionsTab.style.display = "none";  // set options tab display property to 'none' to avoid error when getting its display property
+    optionsTab.style.display = "none";  // set options tab display property to 'none' to avoid errors when getting its display property
 }
 
+document.getElementById("submit-url-button").onclick = function() {
+    submitUrl();
+}
 
-/*
- *  Draw the progress circle and the text according to the percentage passed as arguement
- */
+document.getElementById("deploy-options").onclick = function() {
+    showOptions();
+}
+
+document.getElementById("tab-button-mp3").onclick = function() {
+    openOptionsTab("mp3");
+}
+
+document.getElementById("tab-button-mp4").onclick = function() {
+    openOptionsTab("mp4");
+}
+
+document.getElementById("download-button").onclick = function() {
+    goToDownloadUrl();
+}
+
 
 function drawProgressCircle(percentage) {
-    let context = progressCircle.getContext("2d");
+    const circleContext = {
+        drawingContext: progressCircleElement.getContext("2d"),
+        center: { 
+            x: progressCircleElement.width/2,
+            y: progressCircleElement.height/2
+        },
+        size: {
+            width: progressCircleElement.width,
+            height: progressCircleElement.height
+        },
+        radius: 80,
+        thickness: 20
+    };
 
-    let centerX = progressCircle.width/2;
-    let centerY = progressCircle.height/2;
-    let radius = 80;
-    let thickness = 20;
+    circleContext.drawingContext.clearRect(0, 0, circleContext.size.width, circleContext.size.height);
 
-    context.clearRect(0, 0, progressCircle.width, progressCircle.height);
+    drawInactiveProgress(circleContext, percentage);
+    drawActiveProgress(circleContext, percentage);
 
-    if (percentage == 0) {  // only draw the inactive percentage
-        context.fillStyle = "#FFFFFF";
-        context.beginPath();
-        context.arc(centerX, centerY, radius+thickness, 0, 2*Math.PI, true);
-        context.lineTo(centerX + radius*Math.cos(2*Math.PI), centerY + radius*Math.sin(2*Math.PI));
-        context.arc(centerX, centerY, radius, 2*Math.PI, 0, false);
-        context.lineTo(centerX + radius+thickness, centerY);
-        context.fill();
-        context.closePath();
-    }
-    else {
-        // draw the active percentage
-        context.fillStyle = "#00d4ff"
-        context.beginPath();
-        context.arc(centerX, centerY, radius+thickness, 0, 2*Math.PI*percentage, false);
-        context.lineTo(centerX + radius*Math.cos(2*Math.PI*percentage), centerY + radius*Math.sin(2*Math.PI*percentage));
-        context.arc(centerX, centerY, radius, 2*Math.PI*percentage, 0, true);
-        context.lineTo(centerX + radius+thickness, centerY);
-        context.fill();
-        context.closePath();
-
-        // draw the inactive percentage
-        context.fillStyle = "#FFFFFF";
-        context.beginPath();
-        context.arc(centerX, centerY, radius+thickness, 0, 2*Math.PI*percentage, true);
-        context.lineTo(centerX + radius*Math.cos(2*Math.PI*percentage), centerY + radius*Math.sin(2*Math.PI*percentage));
-        context.arc(centerX, centerY, radius, 2*Math.PI*percentage, 0, false);
-        context.lineTo(centerX + radius+thickness, centerY);
-        context.fill();
-        context.closePath();
-    }
-
-    context.save();
-    context.rotate(Math.PI/2);
-    context.translate(0, -progressCircle.height);
-    context.font = "30px monospace";
-    context.fillText(String(Math.ceil(percentage * 100)) + "%", centerX-20, centerY+10);
-    context.restore();
+    drawPercentageText(circleContext, percentage);
 }
 
+function drawInactiveProgress(circleContext, percentage) {
+    const { drawingContext, center, radius, thickness } = circleContext;
+    const angle = percentage == 0 ? 2*Math.PI : 2*Math.PI*percentage;
 
-/*
- * When the download button is clicked gets '/download'
- */
+    drawingContext.fillStyle = "#FFFFFF";
+    drawingContext.beginPath();
+    drawingContext.arc(center.x, center.y, radius+thickness, 0, angle, true);
+    drawingContext.lineTo(center.x + radius*Math.cos(angle), center.y + radius*Math.sin(angle));
+    drawingContext.arc(center.x, center.y, radius, angle, 0, false);
+    drawingContext.lineTo(center.x + radius+thickness, center.y);
+    drawingContext.fill();
+    drawingContext.closePath();
+}
 
-function download() {
-    window.location.href += "download?file=" + fileName + "&title=" + videoTitle;
+function drawActiveProgress(circleContext, percentage) {
+    const { drawingContext, center, radius, thickness } = circleContext;
+    const angle = 2*Math.PI*percentage;
+
+    drawingContext.fillStyle = "#00d4ff"
+    drawingContext.beginPath();
+    drawingContext.arc(center.x, center.y, radius+thickness, 0, angle, false);
+    drawingContext.lineTo(center.x + radius*Math.cos(angle), center.y + radius*Math.sin(angle));
+    drawingContext.arc(center.x, center.y, radius, angle, 0, true);
+    drawingContext.lineTo(center.x + radius+thickness, center.y);
+    drawingContext.fill();
+    drawingContext.closePath();
+}
+
+function drawPercentageText(circleContext, percentage) {
+    const { drawingContext, center, size } = circleContext;
+
+    drawingContext.save();
+    drawingContext.rotate(Math.PI/2);
+    drawingContext.translate(0, -size.height);
+    drawingContext.fillStyle = "#FFFFFF";
+    drawingContext.font = "30px monospace";
+    drawingContext.fillText(`${Math.ceil(percentage * 100)}%`, center.x-20, center.y+10);
+    drawingContext.restore();
 }
 
 
 function submitUrl() {
     let videoUrl = document.getElementById("url-field").value;
     let httpRequest = new XMLHttpRequest();
+
     httpRequest.onreadystatechange = function() {
-        if (httpRequest.readyState == XMLHttpRequest.LOADING) {
-            if (httpRequest.status == 200) {
-                let response = httpRequest.responseText.split("\n");
-                let latestResponse = JSON.parse(response.pop());
-
-                if (latestResponse.state == "valid-url") {
-                    downloadingElement.style.display = "block";
-                    downloadFinishedElement.style.display = "none";
-                    errorElement.style.display = "none";
-                    document.getElementById("options").style.display = "none";
-                    drawProgressCircle(0);
-                }
-                else if (latestResponse.state == "download-progress") {
-                    drawProgressCircle(latestResponse.percentage);
-                }
-            }
-            else {
+        if (httpRequest.readyState == XMLHttpRequest.LOADING)
+            if (httpRequest.status == 200)
+                handleRequestLoading(getLatestResponse(httpRequest));
+            else
                 console.log("AJAX request failed");
-            }
-        }
-        else if (httpRequest.readyState == XMLHttpRequest.DONE) {
-            if (httpRequest.status == 200) {
-                let response = httpRequest.responseText.split("\n");
-                let latestResponse = JSON.parse(response.pop());
-
-                if (latestResponse.state == "server-download-finished") {
-                    downloadFinishedElement.style.display = "block";
-                    downloadingElement.style.display = "none";
-                    errorElement.style.display = "none";
-
-                    fileName = latestResponse.fileName;
-                    videoTitle = latestResponse.videoTitle;
-                }
-                else if (latestResponse.state == "invalid-url") {
-                    errorElement.style.display = "block";
-                    downloadingElement.style.display = "none";
-                    downloadFinishedElement.style.display = "none";
-
-                    errorElement.textContent = "Sorry, the url that you provided is not valid";
-                }
-                else if (latestResponse.state == "getInfo-error") {
-                    console.log(latestResponse.info);
-                    errorElement.style.display = "block";
-                    downloadingElement.style.display = "none";
-                    downloadFinishedElement.style.display = "none";
-
-                    errorElement.textContent = "An error happened when trying to get video info";
-                }
-                else if (latestResponse.state == "download-error") {
-                    console.log(latestResponse.info);
-                    errorElement.style.display = "block";
-                    downloadingElement.style.display = "none";
-                    downloadFinishedElement.style.display = "none";
-
-                    errorElement.textContent = "An error happened when trying to download the video";
-                }
-            }
-            else {
+        
+        else if (httpRequest.readyState == XMLHttpRequest.DONE)
+            if (httpRequest.status == 200)
+                handleRequestDone(getLatestResponse(httpRequest));
+            else
                 console.log("AJAX request failed");
-            }
-        }
     }
-    httpRequest.open("POST", "/convert", true);
-    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpRequest.send("videourl=" + videoUrl + "&format=" + optionsTabSelected);
+
+    postConvertRequest(httpRequest, videoUrl, optionsTabSelected);
+}
+
+function postConvertRequest(httpRequestObject, videoUrl, format) {
+    httpRequestObject.open("POST", "/convert", true);
+    httpRequestObject.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpRequestObject.send(`videourl=${videoUrl}&format=${format}`);
+}
+
+function getLatestResponse(httpRequestObject) {
+    let response = httpRequestObject.responseText.split("\n");
+    return JSON.parse(response.pop());
+}
+
+function handleRequestLoading(latestResponse) {
+    switch (latestResponse.state) {
+        case "valid-url":
+            downloadingElement.style.display = "block";
+            downloadFinishedElement.style.display = "none";
+            errorElement.style.display = "none";
+            document.getElementById("options").style.display = "none";
+            drawProgressCircle(0);
+            break;
+        case "download-progress":
+            drawProgressCircle(latestResponse.percentage);
+            break;
+        default:
+            console.log("Error : invalid response state");
+            break;
+    }
+}
+
+function handleRequestDone(latestResponse) {
+    switch (latestResponse.state) {
+        case "server-download-finished":
+            downloadFinishedElement.style.display = "block";
+            downloadingElement.style.display = "none";
+            errorElement.style.display = "none";
+
+            filename = latestResponse.filename;
+            videoTitle = latestResponse.videotitle;
+            break;
+        case "invalid-url":
+            showErrorElement("Sorry, the url that you provided is not valid");
+            break;
+        case "get-info-error":
+            showErrorElement("An error occurred when trying to get video informations");
+            break;
+        case "ffmpeg-error":
+            showErrorElement("An error occurred when downloading the video");
+            break;
+        case "invalid-format-error":
+            showErrorElement("Invalid file format");
+            break;
+        default:
+            console.log("Error : unreferenced response state");
+            break;
+    }
+}
+
+function showErrorElement(errorMessage) {
+    errorElement.style.display = "block";
+    downloadingElement.style.display = "none";
+    downloadFinishedElement.style.display = "none";
+    errorElement.textContent = errorMessage;
 }
 
 
@@ -157,52 +191,70 @@ function submitUrl() {
 
 function showOptions() {
     if (optionsTab.style.display == "none") {
-        // fade in
-        optionsTab.style.display = "block";
-        let opacity = optionsTab.style.opacity = 0;
-        deployOptionsButton.style.transform = "scale(3, 1)";
-        deployOptionsButton.style.webkitTransform = "scale(3, 1)";
-        let id = setInterval(() => {
-            if (optionsTab.style.opacity >= 1) {
-                clearInterval(id);
-            }
-            else {
-                opacity += 0.02;
-                optionsTab.style.opacity = opacity;
-                deployOptionsButton.style.transform = "scale(3, " + String(1-opacity*2) + ")";
-                deployOptionsButton.style.webkitTransform = "scale(3, " + String(1-opacity*2) + ")";
-            }
-        }, 10);
-        // show the content of the tab selected
-        if (optionsTabSelected == "mp3") {
-            document.getElementById("tab-button-mp3").click();
-        }
-        else if (optionsTabSelected == "mp4") {
-            document.getElementById("tab-button-mp4").click();
-        }
+        showOptionsTab()
     }
     else if (optionsTab.style.display == "block") {
-        // fade out
-        let opacity = optionsTab.style.opacity = 1;
-        deployOptionsButton.style.transform = "scale(3, -1)";
-        deployOptionsButton.style.webkitTransform = "scale(3, -1)";
-        let id = setInterval(() => {
-            if (optionsTab.style.opacity <= 0) {
-                clearInterval(id);
-                optionsTab.style.display = "none";
-            }
-            else {
-                opacity -= 0.02;
-                optionsTab.style.opacity = opacity;
-                deployOptionsButton.style.transform = "scale(3, " + String(1-opacity*2) + ")";
-                deployOptionsButton.style.webkitTransform = "scale(3, " + String(1-opacity*2) + ")";
-            }
-        }, 10);
-        // hide the tab content
-        let tabContent = document.getElementsByClassName("options-tab-content");
-        for (let i=0; i<tabContent.length; i++) {
-            tabContent[i].style.display = "none";
+        hideOptionsTab()
+    }
+}
+
+function showOptionsTab() {
+    fadeInOptionsTab();
+    
+    // show the content of the tab selected
+    if (optionsTabSelected == "mp3") {
+        document.getElementById("tab-button-mp3").click();
+    }
+    else if (optionsTabSelected == "mp4") {
+        document.getElementById("tab-button-mp4").click();
+    }
+}
+
+function fadeInOptionsTab() {
+    optionsTab.style.display = "block";
+    let opacity = optionsTab.style.opacity = 0;
+    deployOptionsButton.style.transform = "scale(3, 1)";
+    deployOptionsButton.style.webkitTransform = "scale(3, 1)";
+    let id = setInterval(() => {
+        if (optionsTab.style.opacity >= 1) {
+            clearInterval(id);
         }
+        else {
+            opacity += 0.02;
+            optionsTab.style.opacity = opacity;
+            deployOptionsButton.style.transform = "scale(3, " + String(1-opacity*2) + ")";
+            deployOptionsButton.style.webkitTransform = "scale(3, " + String(1-opacity*2) + ")";
+        }
+    }, 10);
+}
+
+function hideOptionsTab() {
+    fadeOutOptionsTab()
+    hideOptionsTabContent()
+}
+
+function fadeOutOptionsTab() {
+    let opacity = optionsTab.style.opacity = 1;
+    deployOptionsButton.style.transform = "scale(3, -1)";
+    deployOptionsButton.style.webkitTransform = "scale(3, -1)";
+    let id = setInterval(() => {
+        if (optionsTab.style.opacity <= 0) {
+            clearInterval(id);
+            optionsTab.style.display = "none";
+        }
+        else {
+            opacity -= 0.02;
+            optionsTab.style.opacity = opacity;
+            deployOptionsButton.style.transform = "scale(3, " + String(1-opacity*2) + ")";
+            deployOptionsButton.style.webkitTransform = "scale(3, " + String(1-opacity*2) + ")";
+        }
+    }, 10);
+}
+
+function hideOptionsTabContent() {
+    let tabContent = document.getElementsByClassName("options-tab-content");
+    for (let i=0; i<tabContent.length; i++) {
+        tabContent[i].style.display = "none";
     }
 }
 
@@ -228,11 +280,12 @@ function openOptionsTab(tabSelected) {
         tabButtonMp4.className = "active";
     }
     
-    // hide the tab content
-    let tabContent = document.getElementsByClassName("options-tab-content");
-    for (let i=0; i<tabContent.length; i++) {
-        tabContent[i].style.display = "none";
-    }
+    hideOptionsTabContent()
 
     document.getElementById(optionsTabSelected).style.display = "block";
+}
+
+
+function goToDownloadUrl() {
+    window.location.href += `download?file=${filename}&title=${videoTitle}`;
 }
