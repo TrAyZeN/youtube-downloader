@@ -1,8 +1,14 @@
 {
-  "name": "trayzen-yt-downloader",
+  "name": "youtube-downloader",
   "version": "0.1.0",
-  "description": "Download youtube videos",
+  "description": "Requirements",
+  "author": "TrAyZeN",
+  "license": "MIT",
   "main": "./bin/www.js",
+  "scripts": {
+    "start": "node ./bin/www.js",
+    "dev": "nodemon ./bin/www.js"
+  },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.19",
     "body-parser": "^1.19.0",
@@ -14,11 +20,5 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
-  },
-  "scripts": {
-    "start": "node ./bin/www.js",
-    "dev": "nodemon ./bin/www.js"
-  },
-  "author": "TrAyZeN",
-  "license": "MIT"
+  }
 }
