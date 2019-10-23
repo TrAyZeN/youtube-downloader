@@ -9,7 +9,7 @@ app.set("port", port);
 const server = http.createServer(app);
 
 server.listen(port, () => {
-    console.log("Server started on port " + port);
+    console.log(`Server started on port ${port}`);
     clearDownloadFolder();
 });
 server.on("error", onError);
@@ -18,7 +18,7 @@ server.on("listening", onListening);
 function clearDownloadFolder() {
 	// delete every file except '.gitkeep' in the downloads directory
     fs.readdirSync("./downloads/").forEach(file => {
-        if (file != ".gitkeep") fs.unlinkSync("./downloads/" + file);
+        if (file != ".gitkeep") fs.unlinkSync(`./downloads/${file}`);
     });
 }
 
@@ -54,17 +54,17 @@ function onError(error) {
 	}
 
 	let bind = typeof port === "string"
-		? "Pipe " + port
-		: "Port " + port;
+		? `Pipe ${port}`
+		: `Port ${port}`;
 
 	// handle specific listen errors with friendly messages
 	switch (error.code) {
 		case "EACCES":
-			console.error(bind + " requires elevated privileges");
+			console.error(`${bind} requires elevated privileges`);
 			process.exit(1);
 		break;
 		case "EADDRINUSE":
-			console.error(bind + " is already in use");
+			console.error(`${bind} is already in use`);
 			process.exit(1);
 		break;
 		default:
@@ -80,7 +80,7 @@ function onError(error) {
 function onListening() {
 	let address = server.address();
 	let bind = typeof address === "string"
-		? "pipe " + address
-		: "port " + address.port;
-	debug("Listening on " + bind);
+		? `pipe ${address}`
+		: `port ${address.port}`;
+	debug(`Listening on ${bind}`);
 }
