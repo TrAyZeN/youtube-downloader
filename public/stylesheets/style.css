@@ -86,7 +86,7 @@ input[type=text] {
 
 .progress-circle {
     transform: rotate(0.75turn);    /* to have the 0 at 12 o'clock */
-    -webkit-transform: rotate(0.75turn);    
+    -webkit-transform: rotate(0.75turn);
 }
 
 .error {
@@ -95,8 +95,8 @@ input[type=text] {
 
 .author {
     font-size: 18px;
-    position: fixed;     
+    position: fixed;
     text-align: right;
-    bottom: 0px; 
+    bottom: 0px;
     width: 60%;
 }

@@ -37,7 +37,7 @@ document.getElementById("download-button").onclick = function() {
 function drawProgressCircle(percentage) {
     const circleContext = {
         drawingContext: progressCircleElement.getContext("2d"),
-        center: { 
+        center: {
             x: progressCircleElement.width/2,
             y: progressCircleElement.height/2
         },
@@ -108,7 +108,7 @@ function submitUrl() {
                 handleRequestLoading(getLatestResponse(httpRequest));
             else
                 console.log("AJAX request failed");
-        
+
         else if (httpRequest.readyState == XMLHttpRequest.DONE)
             if (httpRequest.status == 200)
                 handleRequestDone(getLatestResponse(httpRequest));
@@ -162,7 +162,7 @@ function handleRequestDone(latestResponse) {
             showErrorElement("Sorry, the url that you provided is not valid");
             break;
         case "get-info-error":
-            showErrorElement("An error occurred when trying to get video informations");
+            showErrorElement("An error occurred when trying to get video information");
             break;
         case "ffmpeg-error":
             showErrorElement("An error occurred when downloading the video");
@@ -200,7 +200,7 @@ function showOptions() {
 
 function showOptionsTab() {
     fadeInOptionsTab();
-    
+
     // show the content of the tab selected
     if (optionsTabSelected == "mp3") {
         document.getElementById("tab-button-mp3").click();
@@ -279,7 +279,7 @@ function openOptionsTab(tabSelected) {
         tabButtonMp3.className = "";
         tabButtonMp4.className = "active";
     }
-    
+
     hideOptionsTabContent()
 
     document.getElementById(optionsTabSelected).style.display = "block";
