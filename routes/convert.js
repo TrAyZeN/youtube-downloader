@@ -9,13 +9,12 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 const convert = async (request, response) => {
     const videoUrl = request.body.videourl;
     const format = request.body.format;
-    logger.info(`video url: ${videoUrl}`);
 
     if (ytdl.validateURL(videoUrl) === true) {
-        logger.info("valid url");
+        logger.info(`Valid url: ${videoUrl}`);
         response.write(JSON.stringify({ state: "valid-url" }));
     } else {
-        logger.error("invalid url");
+        logger.error(`Invalid url: ${videoUrl}`);
         response.send(JSON.stringify({ state: "invalid-url" }));
         response.end();
         return;
@@ -23,10 +22,10 @@ const convert = async (request, response) => {
 
     try {
         var info = await getInfo(videoUrl);
-        logger.info("info retrieved");
+        logger.info("Information successfully retrieved");
     }
     catch (error) {
-        logger.error(`failed to get info: ${error}`);
+        logger.error(`Failed to get information: ${error}`);
         response.write("\n" + JSON.stringify({ state: "get-info-error", info: error }));
         response.end();
     }
@@ -60,14 +59,14 @@ function serverDownload(videoInfo, format, response) {
     else if (format == "mp4") {
         var command = downloadVideo(readStream, format);
     } else {
-        logger.error("invalid file format");
+        logger.error("Invalid file format");
         response.write("\n" + JSON.stringify({ state: "invalid-format-error", info: `${format} is not a valid format` }));
         response.end();
         return;
     }
 
     command.on("error", (error) => {
-            logger.error(`failed to write stream: ${error}`);
+            logger.error(`Failed to write stream: ${error}`);
             response.write("\n" + JSON.stringify({state: "ffmpeg-error", info: error }));
             response.end();
             if (fs.existsSync(filePath))
@@ -79,7 +78,7 @@ function serverDownload(videoInfo, format, response) {
             response.write("\n" + JSON.stringify({ state: "download-progress", percentage: percentage }));
         })
         .on("end", () => {
-            logger.info("video downloaded");
+            logger.info("Video successfully downloaded");
             response.write("\n" + JSON.stringify({ state: "server-download-finished", filename: filename, videotitle: videoTitle }));
             response.end();
         });

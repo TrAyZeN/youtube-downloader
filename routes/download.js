@@ -6,7 +6,7 @@ const download = (request, response) => {
     const filename = request.query.file;  // filename is following this norm: videoId.extension ex: RandomId.mp3
     ytdl.getInfo(getVideoIdByFilename(filename), (error, info) => {
         if (error) {
-            logger.error(`failed to get info ${error}`);
+            logger.error(`Failed to get information ${error}`);
             response.write("\n" + JSON.stringify({ state: "get-info-error", info: error }));
             response.end();
             return;
