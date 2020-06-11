@@ -1,86 +1,85 @@
-const app = require("../app");
-const debug = require("debug")("trayzen-yt-downloader:server");
-const http = require("http");
-const fs = require("fs");
+/* eslint-disable no-restricted-globals */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-console */
 
-const port = normalizePort(process.env.PORT || "3001");
-app.set("port", port);
+const fs = require('fs');
+const http = require('http');
+
+const debug = require('debug')('trayzen-yt-downloader:server');
+const app = require('../app');
+
+const port = normalizePort(process.env.PORT || '3001');
+app.set('port', port);
 
 const server = http.createServer(app);
 
 server.listen(port, () => {
-    console.log(`Server started on port ${port}`);
-    clearDownloadFolder();
+  console.log(`Server started on port ${port}`);
+  clearDownloadFolder();
 });
-server.on("error", onError);
-server.on("listening", onListening);
+server.on('error', onError);
+server.on('listening', onListening);
 
 function clearDownloadFolder() {
-	// delete every file except '.gitkeep' in the downloads directory
-    fs.readdirSync("./downloads/").forEach(file => {
-        if (file != ".gitkeep") fs.unlinkSync(`./downloads/${file}`);
-    });
+  // delete every file except '.gitkeep' in the downloads directory
+  fs.readdirSync('./downloads/').forEach((file) => {
+    if (file !== '.gitkeep') fs.unlinkSync(`./downloads/${file}`);
+  });
 }
-
 
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
-    let port = parseInt(val, 10);
+  const portNumber = parseInt(val, 10);
 
-	if (isNaN(port)) {
-		// named pipe
-		return val;
-	}
+  if (isNaN(portNumber)) {
+    // named pipe
+    return val;
+  }
 
-	if (port >= 0) {
-		// port number
-		return port;
-	}
+  if (portNumber >= 0) {
+    // port number
+    return portNumber;
+  }
 
-	return false;
+  return false;
 }
-
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
-	if (error.syscall !== "listen") {
-		throw error;
-	}
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-	let bind = typeof port === "string"
-		? `Pipe ${port}`
-		: `Port ${port}`;
+  const bind = typeof port === 'string'
+    ? `Pipe ${port}`
+    : `Port ${port}`;
 
-	// handle specific listen errors with friendly messages
-	switch (error.code) {
-		case "EACCES":
-			console.error(`${bind} requires elevated privileges`);
-			process.exit(1);
-		break;
-		case "EADDRINUSE":
-			console.error(`${bind} is already in use`);
-			process.exit(1);
-		break;
-		default:
-			throw error;
-	}
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(`${bind} requires elevated privileges`);
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(`${bind} is already in use`);
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 }
-
 
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
-	let address = server.address();
-	let bind = typeof address === "string"
-		? `pipe ${address}`
-		: `port ${address.port}`;
-	debug(`Listening on ${bind}`);
+  const address = server.address();
+  const bind = typeof address === 'string'
+    ? `pipe ${address}`
+    : `port ${address.port}`;
+  debug(`Listening on ${bind}`);
 }

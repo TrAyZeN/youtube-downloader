@@ -14,8 +14,8 @@
     "start": "node ./bin/www.js",
     "dev": "nodemon ./bin/www.js",
     "test": "mocha --exit",
-    "lint": "eslint routes utils app.js",
-    "format": "eslint routes utils app.js --fix"
+    "lint": "eslint routes utils bin app.js",
+    "format": "eslint routes utils bin app.js --fix"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.19",
