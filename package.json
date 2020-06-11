@@ -13,7 +13,9 @@
   "scripts": {
     "start": "node ./bin/www.js",
     "dev": "nodemon ./bin/www.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "lint": "eslint routes utils app.js",
+    "format": "eslint routes utils app.js --fix"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.19",
@@ -27,8 +29,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
     "mocha": "^8.0.1",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5"
   },
   "homepage": "https://github.com/TrAyZeN/youtube-downloader"
 }
