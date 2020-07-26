@@ -14,17 +14,18 @@ express that lets you download youtube videos to mp3 or mp4 format.
 
 ## Requirements
 - [Node.js](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
 
 ## Install
 ```
 git clone https://github.com/TrAyZeN/youtube-downloader.git
 cd youtube-downloader
-npm install
+yarn install
 ```
 
 ## Usage
 ```
-npm start
+yarn start
 ```
 
 ## License
