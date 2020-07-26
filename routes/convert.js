@@ -16,38 +16,26 @@ const convert = async (request, response) => {
   } else {
     logger.error(`Invalid url: ${videoUrl}`);
     response.send(JSON.stringify({ state: 'invalid-url' }));
-    response.end();
-    return;
+    return response.end();
   }
 
   let info;
   try {
-    info = await getInfo(videoUrl);
+    info = await ytdl.getBasicInfo(videoUrl);
     logger.info('Information successfully retrieved');
   } catch (error) {
     logger.error(`Failed to get information: ${error}`);
     response.write(`\n${JSON.stringify({ state: 'get-info-error', info: error })}`);
-    response.end();
-    return;
+    return response.end();
   }
 
   serverDownload(info, format, response);
 };
 
-function getInfo(url) {
-  return new Promise((resolve, reject) => {
-    ytdl.getBasicInfo(url, (error, info) => {
-      if (error) { reject(error); }
-
-      resolve(info);
-    });
-  });
-}
-
 function serverDownload(videoInfo, format, response) {
-  const videoId = videoInfo.video_id;
-  const videoTitle = videoInfo.title;
-  const videoLength = videoInfo.length_seconds;
+  const videoId = videoInfo.videoDetails.videoId;
+  const videoTitle = videoInfo.videoDetails.title;
+  const videoLength = videoInfo.videoDetails.lengthSeconds;
   const filename = `${videoId}.${format}`;
   const filePath = `downloads/${filename}`;
 
@@ -64,8 +52,7 @@ function serverDownload(videoInfo, format, response) {
       state: 'invalid-format-error',
       info: `${format} is not a valid format`,
     })}`);
-    response.end();
-    return;
+    return response.end();
   }
 
   command
