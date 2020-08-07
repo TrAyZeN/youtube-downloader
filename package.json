@@ -14,8 +14,8 @@
     "start": "node ./src/bin/www.js",
     "dev": "nodemon ./src/bin/www.js",
     "test": "mocha --exit",
-    "lint": "eslint src test",
-    "format": "eslint src test --fix"
+    "lint": "eslint src test public/javascript",
+    "format": "eslint src test public/javascript --fix"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.19",
