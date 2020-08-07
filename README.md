@@ -2,7 +2,7 @@
     youtube-downloader
 </h1>
 
-> A website that permits you to download youtube videos
+> A simple website that permits you to download youtube videos
 <div align="center">
     <img src="assets/image.png"/>
 </div>

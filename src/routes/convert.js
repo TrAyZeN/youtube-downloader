@@ -29,11 +29,11 @@ const convert = async (request, response) => {
     return response.end();
   }
 
-  serverDownload(info, format, response);
+  return serverDownload(info, format, response);
 };
 
 function serverDownload(videoInfo, format, response) {
-  const videoId = videoInfo.videoDetails.videoId;
+  const { videoId } = videoInfo.videoDetails;
   const videoTitle = videoInfo.videoDetails.title;
   const videoLength = videoInfo.videoDetails.lengthSeconds;
   const filename = `${videoId}.${format}`;
@@ -81,7 +81,7 @@ function serverDownload(videoInfo, format, response) {
       response.end();
     });
 
-  command.save(filePath);
+  return command.save(filePath);
 }
 
 function downloadAudio(readStream, format) {
