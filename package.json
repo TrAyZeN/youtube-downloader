@@ -24,17 +24,17 @@
     "express": "^4.17.1",
     "ffmpeg": "^0.0.4",
     "fluent-ffmpeg": "^2.1.2",
-    "helmet": "^4.2.0",
-    "ytdl-core": "^4.0.3"
+    "helmet": "^4.5.0",
+    "ytdl-core": "^4.5.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^7.12.1",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "mocha": "^8.2.1",
-    "nodemon": "^2.0.6",
-    "prettier": "^2.1.2"
+    "mocha": "^8.3.2",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1"
   },
   "homepage": "https://github.com/TrAyZeN/youtube-downloader"
 }
