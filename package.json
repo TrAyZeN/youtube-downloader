@@ -1,8 +1,8 @@
 {
   "name": "youtube-downloader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A simple website that permits you to download youtube videos",
-  "main": "./src/bin/www.js",
+  "main": "server.js",
   "author": "TrAyZeN",
   "repository": {
     "type": "git",
