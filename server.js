@@ -6,7 +6,7 @@ const fs = require('fs');
 const http = require('http');
 
 const debug = require('debug')('trayzen-yt-downloader:server');
-const app = require('../app');
+const app = require('src/app.js');
 
 const port = normalizePort(process.env.YTDL_PORT || '3001');
 app.set('port', port);
