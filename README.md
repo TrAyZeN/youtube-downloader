@@ -30,7 +30,8 @@ yarn start
 ```
 
 ## Environment variables
-- `YTDL_PORT`: Port on which the server listens for requests.
+- `YTDL_PORT`: Port on which the server listens for requests. (Default is
+  `3001`)
 
 ## License
 This project licensed under [MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
