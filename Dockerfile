@@ -12,7 +12,9 @@ RUN ls
 
 RUN yarn install
 
-ENV YTDL_PORT=80
+ENV YTDL_PORT=80 \
+    NODE_ENV=production
+
 
 VOLUME /downloads
 
