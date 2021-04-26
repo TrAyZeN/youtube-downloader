@@ -21,9 +21,15 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 function clearDownloadFolder() {
-  // delete every file except '.gitkeep' in the downloads directory
-  fs.readdirSync('./downloads/').forEach((file) => {
-    if (file !== '.gitkeep') fs.unlinkSync(`./downloads/${file}`);
+  fs.stat('./downloads/', (err, stat) => {
+    if (err) {
+      fs.mkdirSync('./downloads/');
+    }
+
+    // delete every file except '.gitkeep' in the downloads directory
+    fs.readdirSync('./downloads/').forEach((file) => {
+      fs.unlinkSync(`./downloads/${file}`);
+    });
   });
 }
 
