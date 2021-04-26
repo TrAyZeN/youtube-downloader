@@ -29,10 +29,17 @@ yarn install
 yarn start
 ```
 
+## Docker
+```
+docker build -t youtube-downloader .
+docker run -p 3000:80 youtube-downloader
+```
+
 ## Environment variables
 - `YTDL_PORT`: Port on which the server listens for requests. (Default is
   `3001`)
 
 ## License
-This project licensed under [MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
+This project licensed under
+[MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
 
