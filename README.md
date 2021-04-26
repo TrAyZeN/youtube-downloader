@@ -15,6 +15,7 @@ express that lets you download youtube videos to mp3 or mp4 format.
 ## Requirements
 - [Node.js](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com/)
+- [FFmpeg](https://www.ffmpeg.org)
 
 ## Install
 ```
@@ -28,5 +29,9 @@ yarn install
 yarn start
 ```
 
+## Environment variables
+- `YTDL_PORT`: Port on which the server listens for requests.
+
 ## License
-MIT TrAyZeN
+This project licensed under [MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
+
