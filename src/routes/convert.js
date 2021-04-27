@@ -1,3 +1,4 @@
+const express = require('express');
 const ytdl = require('ytdl-core');
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const ffmpeg = require('fluent-ffmpeg');
@@ -6,7 +7,9 @@ const logger = require('../utils/logger.js');
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-const convert = async (request, response) => {
+const router = express.Router();
+
+router.post('/convert', async (request, response) => {
   const videoUrl = request.body.videourl;
   const { format } = request.body;
 
@@ -30,7 +33,7 @@ const convert = async (request, response) => {
   }
 
   return serverDownload(info, format, response);
-};
+});
 
 function serverDownload(videoInfo, format, response) {
   const { videoId } = videoInfo.videoDetails;
@@ -105,4 +108,4 @@ function getLengthFromTimemark(timemark) {
     .reduce((accumulator, currentValue) => accumulator + currentValue);
 }
 
-module.exports = convert;
+module.exports = router;

@@ -1,8 +1,11 @@
+const express = require('express');
 const ytdl = require('ytdl-core');
 const path = require('path');
 const logger = require('../utils/logger.js');
 
-const download = async (request, response) => {
+const router = express.Router();
+
+router.get('/download', async (request, response) => {
   // filename is following this norm: videoId.extension ex: RandomId.mp3
   const filename = request.query.file;
 
@@ -16,7 +19,7 @@ const download = async (request, response) => {
 
   const title = request.query.title.replace(/\//g, ' '); // replace every '/' in the title by ' ', to avoid error
   return response.download(getPathByFilename(filename), `${title}.${getExtensionByFilename(filename)}`);
-};
+});
 
 function getVideoIdByFilename(filename) {
   return filename.split('.')[0];
@@ -30,4 +33,4 @@ function getPathByFilename(filename) {
   return path.join('./downloads', filename);
 }
 
-module.exports = download;
+module.exports = router;

@@ -115,7 +115,7 @@ function submitUrl() {
 }
 
 function postConvertRequest(httpRequestObject, videoUrl, format) {
-  httpRequestObject.open('POST', '/convert', true);
+  httpRequestObject.open('POST', '/api/convert', true);
   httpRequestObject.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   httpRequestObject.send(`videourl=${videoUrl}&format=${format}`);
 }
@@ -274,5 +274,5 @@ function openOptionsTab(tabSelected) {
 }
 
 function goToDownloadUrl() {
-  window.location.href += `download?file=${filename}&title=${videoTitle}`;
+  window.location.href += `api/download?file=${filename}&title=${videoTitle}`;
 }

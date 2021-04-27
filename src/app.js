@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
-const router = require('./routes/router.js');
+const router = require('./router.js');
 
 const app = express();
 
@@ -11,6 +11,7 @@ app.use(compression());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/', router);
 
 // catch 404 and forward to error handler
