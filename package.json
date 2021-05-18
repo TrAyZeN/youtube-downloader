@@ -15,7 +15,7 @@
     "dev": "nodemon server.js",
     "test": "mocha --exit",
     "lint": "eslint src test public/javascript",
-    "format": "eslint src test public/javascript --fix"
+    "fmt": "eslint src test public/javascript --fix"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.19",
