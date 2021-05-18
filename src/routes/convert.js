@@ -3,32 +3,41 @@ const ytdl = require('ytdl-core');
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
-const logger = require('../utils/logger.js');
+const { SseEvent } = require('../utils/sse');
+const logger = require('../utils/logger');
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const router = express.Router();
 
-router.post('/convert', async (request, response) => {
-  const videoUrl = request.body.videourl;
-  const { format } = request.body;
+router.get('/convert', async (request, response) => {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache',
+  };
+  response.writeHead(200, headers);
 
-  if (ytdl.validateURL(videoUrl) === true) {
-    logger.info(`Valid url: ${videoUrl}`);
-    response.write(JSON.stringify({ state: 'valid-url' }));
-  } else {
-    logger.error(`Invalid url: ${videoUrl}`);
-    response.send(JSON.stringify({ state: 'invalid-url' }));
+  const { url, format } = request.query;
+
+  if (!ytdl.validateURL(url)) {
+    logger.error(`Invalid url: '${url}'`);
+    response.write(new SseEvent({ state: 'invalid-url' }, 'error').toString());
     return response.end();
   }
 
+  logger.info(`Valid url: '${url}'`);
+  response.write(new SseEvent({ state: 'valid-url' }).toString());
+  response.flush();
+
   let info;
   try {
-    info = await ytdl.getBasicInfo(videoUrl);
+    info = await ytdl.getBasicInfo(url);
     logger.info('Information successfully retrieved');
   } catch (error) {
     logger.error(`Failed to get information: ${error}`);
-    response.write(`\n${JSON.stringify({ state: 'get-info-error', info: error })}`);
+
+    response.write(new SseEvent({ state: 'get-info-error', info: error }, 'error').toString());
     return response.end();
   }
 
@@ -51,36 +60,46 @@ function serverDownload(videoInfo, format, response) {
     command = downloadVideo(readStream, format);
   } else {
     logger.error('Invalid file format');
-    response.write(`\n${JSON.stringify({
-      state: 'invalid-format-error',
-      info: `${format} is not a valid format`,
-    })}`);
+    response.write(
+      new SseEvent({
+        state: 'invalid-format-error',
+        info: `${format} is not a valid format`,
+      },
+      'error').toString(),
+    );
     return response.end();
   }
 
   command
     .on('error', (error) => {
       logger.error(error);
-      response.write(`\n${JSON.stringify({
-        state: 'ffmpeg-error',
-        info: error,
-      })}`);
+
+      response.write(new SseEvent({ state: 'ffmpeg-error', info: error }, 'error').toString());
       response.end();
-      if (fs.existsSync(filePath)) { fs.unlinkSync(filePath); }
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     })
     .on('progress', (chunk) => {
-      response.write(`\n${JSON.stringify({
-        state: 'download-progress',
-        percentage: getLengthFromTimemark(chunk.timemark) / videoLength,
-      })}`);
+      response.write(
+        new SseEvent({
+          percentage: getLengthFromTimemark(chunk.timemark) / videoLength,
+        },
+        'progress').toString(),
+      );
+      response.flush();
     })
     .on('end', () => {
       logger.info('Video successfully downloaded');
-      response.write(`\n${JSON.stringify({
-        state: 'server-download-finished',
-        filename,
-        videotitle: videoTitle,
-      })}`);
+
+      response.write(
+        new SseEvent({
+          filename,
+          videotitle: videoTitle,
+        },
+        'done').toString(),
+      );
       response.end();
     });
 
@@ -101,7 +120,7 @@ function downloadVideo(readStream, format) {
     .videoBitrate(1400);
 }
 
-// convert timemark format 'hh:mm:ss.dd' to its length in seconds
+// Converts timemark format 'hh:mm:ss.dd' to its length in seconds
 function getLengthFromTimemark(timemark) {
   return timemark.slice(0, -3).split(':')
     .map((currentValue, index) => (60 ** (2 - index)) * parseInt(currentValue, 10))
