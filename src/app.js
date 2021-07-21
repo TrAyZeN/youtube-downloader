@@ -2,11 +2,11 @@ const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
-const router = require('./router.js');
+const router = require('./router');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use(compression());
 app.use(helmet());
 app.use(express.json());

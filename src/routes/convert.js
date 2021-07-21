@@ -84,7 +84,7 @@ function serverDownload(videoInfo, format, response) {
     .on('progress', (chunk) => {
       response.write(
         new SseEvent({
-          percentage: getLengthFromTimemark(chunk.timemark) / videoLength,
+          progress: getLengthFromTimemark(chunk.timemark) / videoLength,
         },
         'progress').toString(),
       );
