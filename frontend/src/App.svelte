@@ -48,24 +48,51 @@
         type="text"
         placeholder="Enter the url of the video you want to download"
     >
-    <button on:click={yeas}>Download</button>
+    <button on:click={yeas}>Convert</button>
     <ProgressBar progress={progress} />
 </main>
 
-<style>
+<style lang="scss">
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap');
+
+    $primary: #eeeeee;
+    $secondary: #1a2326;
+
     main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         padding: 1em;
         max-width: 240px;
         margin: 0 auto;
-        background-color: #141414;
+        font-family: 'Rubik', sans-serif;
     }
 
     h1 {
-        color: #ff3e00;
-        text-transform: uppercase;
-        font-size: 4em;
-        font-weight: 100;
+        font-size: 34pt;
+        color: $secondary;
+        margin: 6rem;
+    }
+
+    input {
+        padding: 18px;
+        outline: none;
+        border: none;
+        border-radius: 50px;
+        font-size: 16pt;
+        width: 800px;
+        margin: 3rem;
+    }
+
+    button {
+        background-color: $secondary;
+        color: $primary;
+        border-radius: 18px;
+        font-weight: 600;
+        padding: 16px;
+        font-size: 16pt;
     }
 
     @media (min-width: 640px) {
