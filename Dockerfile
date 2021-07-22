@@ -9,8 +9,8 @@ COPY . .
 RUN yarn install
 RUN yarn --cwd frontend install
 
-ENV YTDL_PORT=80 \
-    NODE_ENV=production
+ARG YTDL_PORT=80
+ENV NODE_ENV=production
 
 VOLUME /downloads
 
