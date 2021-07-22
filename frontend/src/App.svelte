@@ -13,6 +13,7 @@
     let eventSource = null;
     let progress = 0;
     let state = null;
+    let result = null;
 
     function convert() {
         if (eventSource != null) {
@@ -23,22 +24,21 @@
             `/api/convert?url=${encodeURIComponent(url)}&format=mp3`
         );
 
-        eventSource.addEventListener('message', (e) => {
-            console.log(e);
+        eventSource.addEventListener('message', (_) => {
             progress = 0;
             state = states.downloading;
         });
 
         eventSource.addEventListener('progress', (e) => {
-            console.log(e);
             progress = Math.floor(JSON.parse(e.data).progress * 100);
         });
 
-        eventSource.addEventListener('done', (_) => {
+        eventSource.addEventListener('done', (e) => {
             progress = 100;
             eventSource.close();
             eventSource = null;
             state = states.downloaded;
+            result = JSON.parse(e.data);
         });
 
         eventSource.addEventListener('error', (e) => {
@@ -50,7 +50,7 @@
     }
 
     function download() {
-        console.log('hello');
+        window.location.href += `api/download?file=${result.filename}&title=${result.videotitle}`;
     }
 </script>
 
