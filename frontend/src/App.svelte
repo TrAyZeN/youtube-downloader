@@ -14,9 +14,7 @@
     let state = null;
     let result = null;
 
-    function convert(e) {
-        e.preventDefault();
-
+    function convert() {
         if (eventSource != null) {
             return;
         }
@@ -57,7 +55,7 @@
 
 <main>
     <h1>Youtube Downloader</h1>
-    <form on:submit={convert}>
+    <form on:submit|preventDefault={convert}>
         <input
             bind:value={url}
             use:focus
@@ -107,6 +105,13 @@
         font-size: 38pt;
         color: $secondary;
         margin: 8rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     input {
