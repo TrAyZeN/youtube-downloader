@@ -55,16 +55,20 @@
 
 <main>
     <h1>Youtube Downloader</h1>
-    <input
-        bind:value={url}
-        use:focus
-        type="text"
-        placeholder="Enter the url of the video you want to download"
-    >
+    <form action="#" on:submit={convert}>
+        <input
+            bind:value={url}
+            use:focus
+            type="text"
+            placeholder="Enter the url of the video you want to download"
+        >
 
-    {#if state !== states.downloaded}
-        <button on:click={convert}>Convert</button>
-    {:else}
+        {#if state !== states.downloaded}
+            <button type="submit">Convert</button>
+        {/if}
+    </form>
+
+    {#if state === states.downloaded}
         <button on:click={download}>Download</button>
     {/if}
 
@@ -122,6 +126,7 @@
         font-size: 16pt;
         margin: 4px;
         transition: 0.2s;
+        cursor: pointer;
     }
 
     button:hover {
