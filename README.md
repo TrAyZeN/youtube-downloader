@@ -9,8 +9,9 @@
 
 ![build](https://api.travis-ci.org/TrAyZeN/youtube-downloader.svg?branch=master)
 
-youtube-downloader is a simple single page website running under nodejs using
-express that lets you download youtube videos to mp3 or mp4 format.
+youtube-downloader is a simple single page website made using [Svelte](https://svelte.dev)
+and served by [Express JS](https://expressjs.com/fr/) that lets you download youtube
+videos to mp3 or mp4 format.
 
 ## Requirements
 - [Node.js](https://nodejs.org/)
@@ -25,9 +26,13 @@ yarn install
 ```
 
 ## Usage
+Once you have followed the [install instructions](##Install) you can
+run the following command to start the server.
 ```
 yarn start
 ```
+By default the server will start on port 3001 if you want to change
+that see the [environment variables section](##Environment-variables).
 
 ## Docker
 ```
@@ -39,7 +44,7 @@ docker run -p 3000:80 youtube-downloader
 - `YTDL_PORT`: Port on which the server listens for requests. (Default is
   `3001`)
 - `YTDL_DOWNLOAD_DIR`: Directory where to download the videos. (Default is
-  `downloads`)
+  `./downloads`)
 
 ## License
 This project licensed under
