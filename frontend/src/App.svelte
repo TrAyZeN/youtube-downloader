@@ -2,11 +2,17 @@
     import axios from 'axios';
     import ProgressBar from './ProgressBar.svelte';
 
+    const states = {
+        downloading: 0,
+        downloaded: 1,
+        error: 2,
+    };
+
     const focus = node => node.focus();
     let url = '';
     let eventSource = null;
     let progress = 0;
-    let downloaded = false;
+    let state = null;
 
     function convert() {
         if (eventSource != null) {
@@ -20,6 +26,7 @@
         eventSource.addEventListener('message', (e) => {
             console.log(e);
             progress = 0;
+            state = states.downloading;
         });
 
         eventSource.addEventListener('progress', (e) => {
@@ -31,13 +38,14 @@
             progress = 100;
             eventSource.close();
             eventSource = null;
-            downloaded = true;
+            state = states.downloaded;
         });
 
         eventSource.addEventListener('error', (e) => {
             console.log(e);
             eventSource.close();
             eventSource = null;
+            state = states.error;
         });
     }
 
@@ -54,18 +62,22 @@
         type="text"
         placeholder="Enter the url of the video you want to download"
     >
-    {#if !downloaded}
+
+    {#if state !== states.downloaded}
         <button on:click={convert}>Convert</button>
     {:else}
         <button on:click={download}>Download</button>
     {/if}
-    <div class="progress">
-        <ProgressBar progress={progress} barColor='#eeeeee' containerColor='#1a2326' />
-        <div class="progress-text">
-            <p>Downloading...</p>
-            <p>{progress}%</p>
+
+    {#if state === states.downloading}
+        <div class="progress">
+            <ProgressBar progress={progress} barColor='#eeeeee' containerColor='#1a2326' />
+            <div class="progress-text">
+                <p>Downloading...</p>
+                <p>{progress}%</p>
+            </div>
         </div>
-    </div>
+    {/if}
 </main>
 
 <style lang="scss">
