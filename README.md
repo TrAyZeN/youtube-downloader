@@ -13,6 +13,8 @@ youtube-downloader is a simple single page website made using [Svelte](https://s
 and served by [Express JS](https://expressjs.com/fr/) that lets you download youtube
 videos to mp3 or mp4 format.
 
+*You can use the v0.1.0 by clicking [here](https://github.com/TrAyZeN/youtube-downloader/tree/d157f4f468b0986fd69186e2bfb10fe301456f5c).*
+
 ## Requirements
 - [Node.js](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com/)
