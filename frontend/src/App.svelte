@@ -1,5 +1,4 @@
 <script>
-    import axios from 'axios';
     import ProgressBar from './ProgressBar.svelte';
 
     const states = {
@@ -81,7 +80,7 @@
 </main>
 
 <style lang="scss">
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
 
     $primary: #eeeeee;
     $secondary: #1a2326;
