@@ -1,5 +1,5 @@
 build:
   docker:
     web: Dockerfile
-  config:
-    YTDL_PORT: $PORT
+run:
+  web: YTDL_PORT=$PORT yarn start
