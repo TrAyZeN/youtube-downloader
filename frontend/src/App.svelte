@@ -14,7 +14,9 @@
     let state = null;
     let result = null;
 
-    function convert() {
+    function convert(e) {
+        e.preventDefault();
+
         if (eventSource != null) {
             return;
         }
@@ -49,13 +51,13 @@
     }
 
     function download() {
-        window.location.href += `api/download?file=${result.filename}&title=${result.videotitle}`;
+        window.location.href = `/api/download?file=${result.filename}&title=${result.videotitle}`;
     }
 </script>
 
 <main>
     <h1>Youtube Downloader</h1>
-    <form action="#" on:submit={convert}>
+    <form on:submit={convert}>
         <input
             bind:value={url}
             use:focus
