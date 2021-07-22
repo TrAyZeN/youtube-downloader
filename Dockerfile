@@ -4,13 +4,10 @@ RUN apk add ffmpeg
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-COPY src src
-COPY public public
-
-RUN ls
+COPY . .
 
 RUN yarn install
+RUN yarn --cwd frontend install
 
 ENV YTDL_PORT=80 \
     NODE_ENV=production

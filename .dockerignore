@@ -1,0 +1,7 @@
+node_modules/
+frontend/node_modules/
+downloads/
+assets/
+
+heroku.yml
+tags
