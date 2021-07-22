@@ -1,9 +1,11 @@
 class SseEvent {
+  // Creates a new `SseEvent` from the given data and event.
   constructor(data, event = null) {
     this.data = data;
     this.event = event;
   }
 
+  // Gets the string representation of this event.
   toString() {
     let s = '';
     if (this.event) {
