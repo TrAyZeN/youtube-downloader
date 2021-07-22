@@ -15,10 +15,8 @@ RUN yarn install
 ENV YTDL_PORT=80 \
     NODE_ENV=production
 
-
 VOLUME /downloads
 
 EXPOSE 80/tcp
 
 CMD ["yarn", "start"]
-
