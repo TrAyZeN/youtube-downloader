@@ -2,6 +2,8 @@ const ytdl = require('ytdl-core');
 const path = require('path');
 const logger = require('../utils/logger');
 
+const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
+
 async function download(request, response) {
   // filename is following this norm: videoId.extension ex: RandomId.mp3
   const filename = request.query.file;
@@ -27,7 +29,7 @@ function getExtensionByFilename(filename) {
 }
 
 function getPathByFilename(filename) {
-  return path.join('./downloads', filename);
+  return path.join(downloadDir, filename);
 }
 
 module.exports = {

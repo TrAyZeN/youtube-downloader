@@ -5,5 +5,4 @@ const router = express.Router();
 
 router.get('/download', download);
 
-
 module.exports = router;
