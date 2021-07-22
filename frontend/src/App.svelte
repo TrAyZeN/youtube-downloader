@@ -6,30 +6,32 @@
     let url = '';
     let eventSource = null;
     let progress = 0;
+    let downloaded = false;
 
-    function yeas() {
+    function convert() {
         if (eventSource != null) {
             return;
         }
 
         eventSource = new EventSource(
-            `http://localhost:3001/api/convert?url=${encodeURIComponent(url)}&format=mp3`
+            `/api/convert?url=${encodeURIComponent(url)}&format=mp3`
         );
 
         eventSource.addEventListener('message', (e) => {
-            console.log(`Got a message: ${e.data}`);
+            console.log(e);
             progress = 0;
         });
 
         eventSource.addEventListener('progress', (e) => {
-            console.log(`Got progress: ${e.data}`);
+            console.log(e);
             progress = Math.floor(JSON.parse(e.data).progress * 100);
         });
 
-        eventSource.addEventListener('done', (e) => {
+        eventSource.addEventListener('done', (_) => {
             progress = 100;
             eventSource.close();
             eventSource = null;
+            downloaded = true;
         });
 
         eventSource.addEventListener('error', (e) => {
@@ -37,6 +39,10 @@
             eventSource.close();
             eventSource = null;
         });
+    }
+
+    function download() {
+        console.log('hello');
     }
 </script>
 
@@ -48,8 +54,18 @@
         type="text"
         placeholder="Enter the url of the video you want to download"
     >
-    <button on:click={yeas}>Convert</button>
-    <ProgressBar progress={progress} />
+    {#if !downloaded}
+        <button on:click={convert}>Convert</button>
+    {:else}
+        <button on:click={download}>Download</button>
+    {/if}
+    <div class="progress">
+        <ProgressBar progress={progress} barColor='#eeeeee' containerColor='#1a2326' />
+        <div class="progress-text">
+            <p>Downloading...</p>
+            <p>{progress}%</p>
+        </div>
+    </div>
 </main>
 
 <style lang="scss">
@@ -71,9 +87,9 @@
     }
 
     h1 {
-        font-size: 34pt;
+        font-size: 38pt;
         color: $secondary;
-        margin: 6rem;
+        margin: 8rem;
     }
 
     input {
@@ -83,7 +99,7 @@
         border-radius: 50px;
         font-size: 16pt;
         width: 800px;
-        margin: 3rem;
+        margin: 1rem;
     }
 
     button {
@@ -93,7 +109,33 @@
         font-weight: 600;
         padding: 16px;
         font-size: 16pt;
+        margin: 4px;
+        transition: 0.2s;
     }
+
+    button:hover {
+        padding: 20px;
+        margin: 0px;
+    }
+
+    .progress {
+        margin: 20px;
+        margin-top: 6rem;
+
+        .progress-text {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+
+            p {
+                margin: 0;
+                margin-top: 10px;
+            }
+        }
+    }
+
 
     @media (min-width: 640px) {
         main {

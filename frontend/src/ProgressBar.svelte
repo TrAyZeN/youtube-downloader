@@ -6,7 +6,7 @@
     // Color of the container
     export let containerColor = "red";
     // Border radius in pixel
-    export let radius = 6;
+    export let radius = 50;
 </script>
 
 <main style="
@@ -21,12 +21,19 @@
     </div>
 </main>
 
-<style>
+<style lang="scss">
     main {
-        height: 20px;
-    }
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
 
-    .bar {
-        height: 100%;
+        height: 40px;
+        width: 500px;
+        padding: 0 5px;
+
+        .bar {
+            height: 30px;
+            width: 0;
+        }
     }
 </style>
