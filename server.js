@@ -4,9 +4,10 @@
 
 const fs = require('fs');
 const http = require('http');
+const path = require('path');
 
 const debug = require('debug')('trayzen-yt-downloader:server');
-const app = require('../app');
+const app = require('./src/app');
 
 const port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
@@ -15,20 +16,22 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
   console.log(`Server started on port ${port}`);
-  clearDownloadFolder();
+  clearDownloadDirectory();
 });
 server.on('error', onError);
 server.on('listening', onListening);
 
-function clearDownloadFolder() {
-  fs.stat('./downloads/', (err, stat) => {
+function clearDownloadDirectory() {
+  const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
+
+  fs.stat(downloadDir, (err) => {
     if (err) {
-      fs.mkdirSync('./downloads/');
+      fs.mkdirSync(downloadDir);
     }
 
     // delete every file except '.gitkeep' in the downloads directory
-    fs.readdirSync('./downloads/').forEach((file) => {
-      fs.unlinkSync(`./downloads/${file}`);
+    fs.readdirSync(downloadDir).forEach((file) => {
+      fs.unlinkSync(path.join(downloadDir, file));
     });
   });
 }

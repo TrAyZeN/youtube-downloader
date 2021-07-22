@@ -38,8 +38,9 @@ docker run -p 3000:80 youtube-downloader
 ## Environment variables
 - `YTDL_PORT`: Port on which the server listens for requests. (Default is
   `3001`)
+- `YTDL_DOWNLOAD_DIR`: Directory where to download the videos. (Default is
+  `downloads`)
 
 ## License
 This project licensed under
 [MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
-

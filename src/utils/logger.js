@@ -28,25 +28,28 @@ function colorString(str, color) {
 
 // eslint-disable-next-line no-unused-vars
 function debug(message) {
-  console.log(`${formatedCurrentDate()} ${colorString('[DEBUG]', consoleColor.green)} ${message}`);
+  console.log(`${formatDate(new Date())} ${colorString('[DEBUG]', consoleColor.green)} ${message}`);
 }
 
 function info(message) {
-  console.log(`${formatedCurrentDate()} ${colorString('[INFO ]', consoleColor.yellow)} ${message}`);
+  console.log(`${formatDate(new Date())} ${colorString('[INFO ]', consoleColor.yellow)} ${message}`);
 }
 
 function error(message) {
-  console.error(`${formatedCurrentDate()} ${colorString('[ERROR]', consoleColor.red)} ${message}`);
+  console.error(`${formatDate(new Date())} ${colorString('[ERROR]', consoleColor.red)} ${message}`);
 }
 
-function formatedCurrentDate() {
-  const now = new Date();
-  const date = `${zfill(now.getDate(), 2)}-${zfill(now.getMonth() + 1, 2)}-${zfill(now.getFullYear(), 4)}`;
-  const time = `${zfill(now.getHours(), 2)}:${zfill(now.getMinutes(), 2)}:${zfill(now.getSeconds(), 2)}`;
+// Formats the given date to the following format:
+// DD-MM-YYYY HH:MM:SS
+function formatDate(date) {
+  const d = `${zfill(date.getDate(), 2)}-${zfill(date.getMonth() + 1, 2)}-${zfill(date.getFullYear(), 4)}`;
+  const t = `${zfill(date.getHours(), 2)}:${zfill(date.getMinutes(), 2)}:${zfill(date.getSeconds(), 2)}`;
 
-  return `${date} ${time}`;
+  return `${d} ${t}`;
 }
 
+// Prepends `0` at the beginning of the string until
+// the string's length is equal to n.
 function zfill(str, n) {
   let result = str.toString();
   let i = result.length;

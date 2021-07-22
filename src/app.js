@@ -1,16 +1,17 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const compression = require('compression');
-const router = require('./routes/router.js');
+const router = require('./router');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet());
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use(compression());
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/', router);
 
 // catch 404 and forward to error handler
