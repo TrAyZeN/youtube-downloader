@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 
+const process = require('process');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
@@ -9,7 +10,7 @@ const path = require('path');
 const debug = require('debug')('trayzen-yt-downloader:server');
 const app = require('./src/app');
 
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.YTDL_PORT || '3001');
 app.set('port', port);
 
 const server = http.createServer(app);

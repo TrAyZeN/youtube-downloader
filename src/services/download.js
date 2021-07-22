@@ -1,3 +1,4 @@
+const process = require('process');
 const ytdl = require('ytdl-core');
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const ffmpeg = require('fluent-ffmpeg');

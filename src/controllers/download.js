@@ -1,3 +1,4 @@
+const process = require('process');
 const ytdl = require('ytdl-core');
 const path = require('path');
 const logger = require('../utils/logger');
