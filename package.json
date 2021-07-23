@@ -11,8 +11,8 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "start": "yarn build && node build/server.js",
-    "build": "yarn --cwd frontend build && tsc --project ./ && cp -r ./frontend/public ./build/frontend",
+    "start": "node build/server.js",
+    "build": "yarn --cwd frontend build && tsc --project ./ && mkdir -p ./build/frontend && cp -r ./frontend/public ./build/frontend/public",
     "dev": "nodemon server.ts",
     "test": "mocha --exit",
     "lint": "eslint src tests",

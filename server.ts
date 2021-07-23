@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 
+import process from 'process';
 import fs from 'fs';
 import http from 'http';
 import path from 'path';

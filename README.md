@@ -25,6 +25,7 @@ videos to mp3 or mp4 format.
 git clone https://github.com/TrAyZeN/youtube-downloader.git
 cd youtube-downloader
 yarn install
+yarn build
 ```
 
 ## Usage

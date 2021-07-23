@@ -1,8 +1,9 @@
 node_modules/
 frontend/node_modules/
-downloads/
-assets/
 build/
+frontend/public/build/
+assets/
+downloads/
 
 heroku.yml
 tags
