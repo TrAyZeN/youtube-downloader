@@ -1,16 +1,24 @@
-const process = require('process');
-const ytdl = require('ytdl-core');
-const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
-const ffmpeg = require('fluent-ffmpeg');
-const fs = require('fs');
-const path = require('path');
-const logger = require('../utils/logger');
+import process from 'process';
+import ytdl from 'ytdl-core';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+import ffmpeg, { FfmpegCommand } from 'fluent-ffmpeg';
+import fs from 'fs';
+import path from 'path';
+import logger from '../utils/logger';
+import internal from 'stream';
+
+export enum Format {
+  Mp3 = 'mp3',
+  Mp4 = 'mp4',
+};
+
+type ProgressCallback = (progress: number) => void;
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
 
-function download(videoInfo, format, progressCallback = null) {
+function download(videoInfo: ytdl.videoInfo, format: Format, progressCallback: ProgressCallback | null = null) {
   return new Promise((resolve, reject) => {
     const { videoId } = videoInfo.videoDetails;
     const videoLength = videoInfo.videoDetails.lengthSeconds;
@@ -20,13 +28,10 @@ function download(videoInfo, format, progressCallback = null) {
     const readStream = ytdl(videoId);
 
     let command;
-    if (format === 'mp3') {
+    if (format === Format.Mp3) {
       command = downloadAudio(readStream, format);
-    } else if (format === 'mp4') {
-      command = downloadVideo(readStream, format);
     } else {
-      logger.error('Invalid file format');
-      reject();
+      command = downloadVideo(readStream, format);
     }
 
     command
@@ -41,12 +46,12 @@ function download(videoInfo, format, progressCallback = null) {
       })
       .on('progress', (chunk) => {
         if (progressCallback) {
-          progressCallback(getLengthFromTimemark(chunk.timemark) / videoLength);
+          progressCallback(getLengthFromTimemark(chunk.timemark) / Number.parseInt(videoLength));
         }
       })
       .on('end', () => {
         logger.info('Video successfully downloaded');
-        resolve();
+        resolve(null);
       })
       .save(filePath);
 
@@ -54,14 +59,14 @@ function download(videoInfo, format, progressCallback = null) {
   });
 }
 
-function downloadAudio(readStream, format) {
+function downloadAudio(readStream: internal.Readable, format: string): FfmpegCommand {
   return ffmpeg(readStream)
     .toFormat(format)
     .audioBitrate(198)
     .noVideo();
 }
 
-function downloadVideo(readStream, format) {
+function downloadVideo(readStream: internal.Readable, format: string): FfmpegCommand {
   return ffmpeg(readStream)
     .toFormat(format)
     .audioBitrate(198)
@@ -69,10 +74,10 @@ function downloadVideo(readStream, format) {
 }
 
 // Converts timemark format 'hh:mm:ss.dd' to its length in seconds
-function getLengthFromTimemark(timemark) {
+function getLengthFromTimemark(timemark: string): number {
   return timemark.slice(0, -3).split(':')
     .map((currentValue, index) => (60 ** (2 - index)) * parseInt(currentValue, 10))
     .reduce((accumulator, currentValue) => accumulator + currentValue);
 }
 
-module.exports = download;
+export default download;

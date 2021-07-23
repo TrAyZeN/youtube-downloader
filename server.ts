@@ -2,13 +2,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 
-const process = require('process');
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
+import fs from 'fs';
+import http from 'http';
+import path from 'path';
 
 const debug = require('debug')('trayzen-yt-downloader:server');
-const app = require('./src/app');
+import app from './src/app';
 
 const port = normalizePort(process.env.YTDL_PORT || '3001');
 app.set('port', port);
@@ -25,13 +24,13 @@ server.on('listening', onListening);
 function clearDownloadDirectory() {
   const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
 
-  fs.stat(downloadDir, (err) => {
+  fs.stat(downloadDir, (err: any) => {
     if (err) {
       fs.mkdirSync(downloadDir);
     }
 
     // delete every file except '.gitkeep' in the downloads directory
-    fs.readdirSync(downloadDir).forEach((file) => {
+    fs.readdirSync(downloadDir).forEach((file: string) => {
       fs.unlinkSync(path.join(downloadDir, file));
     });
   });
@@ -40,7 +39,7 @@ function clearDownloadDirectory() {
 /**
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val) {
+function normalizePort(val: string) {
   const portNumber = parseInt(val, 10);
 
   if (isNaN(portNumber)) {
@@ -59,7 +58,7 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-function onError(error) {
+function onError(error: any) {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -90,6 +89,6 @@ function onListening() {
   const address = server.address();
   const bind = typeof address === 'string'
     ? `pipe ${address}`
-    : `port ${address.port}`;
+    : `port ${address ? address.port : null}`;
   debug(`Listening on ${bind}`);
 }

@@ -1,12 +1,15 @@
 class SseEvent {
+  data: string | Object;
+  event: string | null;
+
   // Creates a new `SseEvent` from the given data and event.
-  constructor(data, event = null) {
+  constructor(data: string | Object, event: string | null = null) {
     this.data = data;
     this.event = event;
   }
 
   // Gets the string representation of this event.
-  toString() {
+  toString(): string {
     let s = '';
     if (this.event) {
       s += `event: ${this.event}\n`;
@@ -22,6 +25,4 @@ class SseEvent {
   }
 }
 
-module.exports = {
-  SseEvent,
-};
+export default SseEvent;
