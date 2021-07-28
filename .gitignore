@@ -2,3 +2,4 @@ node_modules/
 downloads/
 build/
 tags
+yarn-error.log
