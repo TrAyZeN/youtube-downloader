@@ -1,0 +1,30 @@
+name: update-deps
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # checkout the repository content to github runner
+
+      - name: Update dependencies
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: upgrade --latest ytdl-core
+
+      - name: Commit updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update dependencies" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
