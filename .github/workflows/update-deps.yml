@@ -2,7 +2,7 @@ name: update-deps
 
 on:
   schedule:
-    - cron: '5 * * * *'
+    - cron: '0/5 * * * *'
 
 jobs:
   build:
@@ -19,8 +19,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "Update dependencies" -a
+          git add -u
+          git commit -m "Update dependencies"
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
