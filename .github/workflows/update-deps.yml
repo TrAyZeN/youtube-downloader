@@ -2,7 +2,7 @@ name: update-deps
 
 on:
   schedule:
-    - cron: '0/5 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # checkout the repository content to github runner
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
 
       - name: Update dependencies
         uses: borales/actions-yarn@v2.3.0
