@@ -1,4 +1,5 @@
 {
+  "private": "true",
   "name": "youtube-downloader",
   "version": "0.2.0",
   "description": "A simple website that permits you to download youtube videos",
@@ -18,6 +19,7 @@
     "lint": "eslint src tests",
     "fmt": "eslint src tests --fix"
   },
+  "workspaces": ["frontend"],
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "compression": "^1.7.4",
