@@ -19,7 +19,9 @@
     "lint": "eslint src tests",
     "fmt": "eslint src tests --fix"
   },
-  "workspaces": ["frontend"],
+  "workspaces": [
+    "frontend"
+  ],
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "compression": "^1.7.4",
