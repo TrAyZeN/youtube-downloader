@@ -7,7 +7,7 @@ import logger from '../utils/logger';
 
 const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
 
-export async function download(req: Request, res: Response) {
+async function controller(req: Request, res: Response) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: errors.array() });
@@ -41,3 +41,5 @@ function getExtensionByFilename(filename: string): string {
 function getPathByFilename(filename: string): string {
   return path.join(downloadDir, filename);
 }
+
+export default controller;

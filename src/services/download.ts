@@ -12,13 +12,13 @@ export enum Format {
   Mp4 = 'mp4',
 };
 
-type ProgressCallback = (progress: number) => void;
+export type ProgressCallback = (progress: number) => void;
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const downloadDir = process.env.YTDL_DOWNLOAD_DIR || './downloads';
 
-function download(videoInfo: ytdl.videoInfo, format: Format, progressCallback: ProgressCallback | null = null) {
+function downloadProgress(videoInfo: ytdl.videoInfo, format: Format, progressCallback: ProgressCallback | null = null) {
   return new Promise((resolve, reject) => {
     const { videoId } = videoInfo.videoDetails;
     const videoLength = videoInfo.videoDetails.lengthSeconds;
@@ -80,4 +80,4 @@ function getLengthFromTimemark(timemark: string): number {
     .reduce((accumulator, currentValue) => accumulator + currentValue);
 }
 
-export default download;
+export default downloadProgress;

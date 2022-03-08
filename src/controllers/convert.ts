@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { validationResult, matchedData } from 'express-validator';
-import ytdl from 'ytdl-core';
 import SseEvent from '../utils/sse';
 import logger from '../utils/logger';
-import download, { Format } from '../services/download';
+import { convert, FfmpegError, GetInfoError } from '../services/convert';
 
-export async function convert(req: Request, res: Response) {
+async function controller(req: Request, res: Response) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ error: errors.array() });
@@ -25,19 +24,9 @@ export async function convert(req: Request, res: Response) {
   res.write(new SseEvent({ state: 'valid-url' }).toString());
   res.flush();
 
-  let info;
+  let downloadInfo;
   try {
-    info = await ytdl.getBasicInfo(url);
-    logger.info('Information successfully retrieved');
-  } catch (error) {
-    logger.error(`Failed to get information: ${error}`);
-
-    res.write(new SseEvent({ state: 'get-info-error', info: error }, 'error').toString());
-    return res.end();
-  }
-
-  try {
-    await download(info, format, (progress) => {
+    downloadInfo = await convert(url, format, (progress) => {
       res.write(
         new SseEvent({
           progress,
@@ -47,16 +36,25 @@ export async function convert(req: Request, res: Response) {
       res.flush();
     });
   } catch (error) {
-    res.write(new SseEvent({ state: 'ffmpeg-error', info: error }, 'error').toString());
+    if (error instanceof GetInfoError) {
+      res.write(new SseEvent({ state: 'get-info-error', info: error.message }, 'error').toString());
+    } else if (error instanceof FfmpegError) {
+      res.write(new SseEvent({ state: 'ffmpeg-error', info: error.message }, 'error').toString());
+    } else {
+      throw error;
+    }
+
     return res.end();
   }
 
   res.write(
     new SseEvent({
-      filename: `${info.videoDetails.videoId}.${format}`,
-      videotitle: info.videoDetails.title,
+      filename: downloadInfo.filename,
+      videotitle: downloadInfo.videotitle,
     },
     'done').toString(),
   );
   return res.end();
 }
+
+export default controller;

@@ -1,6 +1,6 @@
 import express from 'express';
 import { query } from 'express-validator';
-import { download } from '../controllers/download';
+import downloadController from '../controllers/download';
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get(
     query('file', 'Missing \'file\' field.'),
     query('title', 'Missing \'title\' field.')
   ],
-  download
+  downloadController
 );
 
 export default router;
