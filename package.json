@@ -15,7 +15,7 @@
     "start": "node build/server.js",
     "build": "yarn --cwd frontend build && tsc --project ./ && mkdir -p ./build/frontend && cp -r ./frontend/public ./build/frontend/public",
     "dev": "nodemon server.ts",
-    "test": "mocha --exit",
+    "test": "mocha -r ts-node/register 'tests/*.test.ts'",
     "lint": "eslint src tests",
     "fmt": "eslint src tests --fix"
   },
@@ -32,12 +32,16 @@
     "ytdl-core": "^4.11.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/chai-as-promised": "^7.1.5",
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.13",
     "@types/express-validator": "^3.0.0",
     "@types/fluent-ffmpeg": "^2.1.20",
+    "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.18",
     "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
