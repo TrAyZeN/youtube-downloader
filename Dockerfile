@@ -12,9 +12,10 @@ RUN yarn --cwd frontend install
 RUN yarn build
 
 ENV YTDL_PORT=80 \
+    YTDL_DOWNLOAD_DIR=/app/downloads \
     NODE_ENV=production
 
-VOLUME /downloads
+VOLUME /app/downloads
 
 EXPOSE 80/tcp
 
