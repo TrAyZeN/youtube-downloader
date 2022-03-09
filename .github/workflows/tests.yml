@@ -1,0 +1,14 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build . --tag youtube-downloader:latest
+      - run: docker run youtube-downloader:latest yarn test
