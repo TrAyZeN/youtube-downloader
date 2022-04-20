@@ -40,7 +40,7 @@ that see the [environment variables section](##Environment-variables).
 ## Docker
 ```
 docker build -t youtube-downloader .
-docker run -p 3000:80 youtube-downloader
+docker run -p 3001:80 youtube-downloader
 ```
 
 ## Environment variables
