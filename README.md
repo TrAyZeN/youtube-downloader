@@ -49,6 +49,11 @@ docker run -p 3001:80 youtube-downloader
 - `YTDL_DOWNLOAD_DIR`: Directory where to download the videos. (Default is
   `./downloads`)
 
+## Contributing
+Contributions are welcome! Just [submit a pull request](https://github.com/TrAyZeN/youtube-downloader/compare).
+
+If you want to report a bug or request a feature just [open an issue](https://github.com/TrAyZeN/youtube-downloader/issues/new).
+
 ## License
-This project licensed under
+This project is licensed under
 [MIT License](https://github.com/TrAyZeN/youtube-downloader/blob/master/LICENSE).
