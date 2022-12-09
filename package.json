@@ -39,7 +39,7 @@
     "@types/express-validator": "^3.0.0",
     "@types/fluent-ffmpeg": "^2.1.20",
     "@types/mocha": "^10.0.0",
-    "@types/node": "^18.7.23",
+    "@types/node": "^18.11.12",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.24.0",
